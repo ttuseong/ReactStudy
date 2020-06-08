@@ -5,6 +5,7 @@ const TOC = require('./Components/TOC.jsx');
 const ReadContent = require('./Components/ReadContent.jsx');
 const Control = require('./Components/Control.jsx');
 const CreateContent = require('./Components/CreateContent.jsx');
+const UpdateContent = require('./Components/UpdateContent.jsx');
 
 class ReactEx extends Component{
     constructor(props){
@@ -21,6 +22,15 @@ class ReactEx extends Component{
             ]
         }
     }
+
+    getReadContent(){
+        for(var i = 0; i < this.state.contents.length; i++){
+            if(this.state.select === this.state.contents[i].id){
+                return this.state.contents[i];
+            }
+        }
+    }
+
     render(){
         var _title, _desc, _content;
 
@@ -29,24 +39,33 @@ class ReactEx extends Component{
             _desc = this.state.Welcome.desc;
             _content = <ReadContent title = {_title} desc = {_desc} />
         } else if(this.state.mode === 'Read'){
-            for(var i = 0; i < this.state.contents.length; i++){
-                if(this.state.select === this.state.contents[i].id){
-                    _title = this.state.contents[i].title;
-                    _desc = this.state.contents[i].desc;
-                    _content = <ReadContent title = {_title} desc = {_desc} />
-                    break;
-                }
-            }
+            _content = <ReadContent title = {this.getReadContent().title}
+                desc = {this.getReadContent().desc} />
         } else if(this.state.mode === "Create"){
             _content = <CreateContent onCreate = {function(ntitle, ndesc){
                 this.maxContent+=1;
                 var nContent = this.state.contents.concat({id : this.maxContent,
                  title : ntitle, desc : ndesc});
                  this.setState({
-                     contents : nContent
+                     contents : nContent,
+                     mode : 'Read',
+                     select : this.maxContent
                  })
             }.bind(this)}>
             </CreateContent>
+        } else if(this.state.mode === "Update"){
+            _content = <UpdateContent data = {this.getReadContent()}
+            onUpdate = {function(_id, _title, _desc){
+                var _contents = Array.from(this.state.contents);
+                for(var i = 0; i <_contents.length; i++){
+                    if(_contents[i].id === _id){
+                        _contents[i] = {id : _id, title : _title, desc : _desc};
+                        break;
+                    }
+                }
+                this.setState({contents : _contents, mode : 'Read'});
+            }.bind(this)}
+            />  
         }
         return (
             <div>
