@@ -66,7 +66,7 @@ class ReactEx extends Component{
                 this.setState({contents : _contents, mode : 'Read'});
             }.bind(this)}
             />  
-        }
+        } 
         return (
             <div>
                 <Title title = {this.state.Welcome.title} desc = 
@@ -80,7 +80,21 @@ class ReactEx extends Component{
                         this.setState({mode : 'Read', select : Number(id)})
                 }.bind(this)}/>
                 <Control onChangeMode = {function(_mode){
-                    this.setState({mode : _mode})
+                    if(_mode === 'Delete'){
+                        if(window.confirm('really')){
+                            var _contents = Array.from(this.state.contents);
+                            for(var i = 0; i < _contents.length; i++){
+                                if(_contents[i].id === this.state.select){
+                                    {console.log(i)}
+                                    _contents.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            this.setState({mode : 'Welcome', contents : _contents})
+                        }
+                    } else{
+                        this.setState({mode : _mode})
+                    }
                 }.bind(this)}></Control>
                 {_content}
             </div>
