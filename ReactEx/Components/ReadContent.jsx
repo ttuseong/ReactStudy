@@ -1,7 +1,7 @@
 const React = require('react');
 const { Component } = React;
 
-class Content extends Component{
+class ReadContent extends Component{
     render(){
         return(
             <div>
@@ -12,4 +12,4 @@ class Content extends Component{
     }
 }
 
-module.exports = Content;
+module.exports = ReadContent;
